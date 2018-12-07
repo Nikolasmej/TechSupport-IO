@@ -129,7 +129,7 @@ public class Responder
             String response = reader.readLine();
             while(response != null) {
                 defaultResponses.add(response);
-                
+                reader.readLine();
                 response = reader.readLine();
             }
         }
