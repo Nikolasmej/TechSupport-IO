@@ -5,7 +5,8 @@ import java.util.Scanner;
  * InputReader reads typed text input from the standard text terminal. 
  * The text typed by a user is then chopped into words, and a set of words 
  * is provided.
- * 
+ * @Nick.
+ * @Lab 13
  * @author David J. Barnes and Michael Kölling.
  * @version 2016.02.29
  */
