@@ -22,11 +22,13 @@
     public class Responder
     {
         // Used to map key words to responses.
+        private HashMap<String, String> responseMap;
         //private HashMap<String, String> responseMap;
         // Default responses to use if we don't recognise a word.
         private ArrayList<String> defaultResponses;
         // The name of the file containing the default responses.
         private static final String FILE_OF_DEFAULT_RESPONSES = "default.txt";
+        private static final String FILE_OF_RESPONSES = "responses.txt";
         private Random randomGenerator;
     
         /**
@@ -35,6 +37,7 @@
         public Responder()
         { 
             defaultResponses = new ArrayList<String>();
+            responseMap = new HashMap<>();
             fillDefaultResponses();
             randomGenerator = new Random();
         }
@@ -47,43 +50,72 @@
          */
         public String generateResponse(HashSet<String> words)
         {
-            String response;
-            String word;
-            String line;
-            BufferedReader reader;
-            try
-            {
-                reader = new BufferedReader(new FileReader("responses.txt"));
-                Iterator<String> it = words.iterator();
-                while(it.hasNext()) {
-                    word = it.next(); 
-                    line =reader.readLine();
-                    
-                    while(line !=null) {
-                     if(line.trim().equalsIgnoreCase(word.trim())){
-                         response = reader.readLine();
-                        
-                    if(response != null) {
+            Iterator<String> it = words.iterator();
+            while(it.hasNext()) {
+            String word = it.next();
+            String response = responseMap.get(word);
+            if(response != null) {
                     return response;
-                }  
+                }
+            }
+            return pickDefaultResponse();
+         }    
+         
+         
+     /**
+     * responseMap read from text file
+     * 
+     */
+    private void fillResponseMap()
+    {
+        Charset charset = Charset.forName("US-ASCII");
+        Path path = Paths.get(FILE_OF_RESPONSES);
+        try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
+            String response = reader.readLine();
+            boolean isFollowing = false;
+            String key = null;
+            int blankLine = 0;
+            do
+            {
+                if((response != null) && (!response.isEmpty()))
+                {
+                    StringBuilder StringBuilder = new StringBuilder();
+                    blankLine--;
+                    while((response != null) && (!response.trim().isEmpty()))
+                    {
+                        if(!isFollowing)
+                        {
+                            key = response;
+                            isFollowing = true;
+                        }
+                        else
+                        {
+                            StringBuilder.append(response);
+                            StringBuilder.append("\n");
+                        }
+                        response = reader.readLine();
+                    }
+                    blankLine++;
+                    responseMap.put(key.trim(), StringBuilder.toString());
+                    isFollowing = false;
+                    
+                }
+                else
+                {
+                    blankLine++;
+                }
+                response = reader.readLine();
+            }while (blankLine < 2);
         }
-        else {
-            reader.readLine();
-        }
-        line =reader.readLine();
-    }
-        }
-        reader.close();
-    }
     
-    catch(FileNotFoundException e) {
+        catch(FileNotFoundException e) {
             System.err.println("Unable to open " + FILE_OF_DEFAULT_RESPONSES);
         }
         catch(IOException e) {
             System.err.println("A problem was encountered reading " +
                                FILE_OF_DEFAULT_RESPONSES);
         }
-    return pickDefaultResponse();    
+        
 }
 
  
@@ -97,11 +129,30 @@
         Path path = Paths.get(FILE_OF_DEFAULT_RESPONSES);
         try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
             String response = reader.readLine();
-            while(response != null) {
-                defaultResponses.add(response);
-                reader.readLine();
+            int blankLine = 0;
+            do
+            {
+                if((response != null) && (!response.isEmpty()))
+                {
+                    StringBuilder StringBuilder  = new StringBuilder();
+                    blankLine--;
+                    while((response != null) && (!response.isEmpty()))
+                    {
+                        StringBuilder.append(response);
+                        response = reader.readLine();
+                    }
+                    blankLine++;
+                    defaultResponses.add(StringBuilder.toString());
+                }
+                else
+                {
+                    blankLine++;
+                }
+
+                
                 response = reader.readLine();
-            }
+                
+            }while (blankLine < 2);
         }
         catch(FileNotFoundException e) {
             System.err.println("Unable to open " + FILE_OF_DEFAULT_RESPONSES);
