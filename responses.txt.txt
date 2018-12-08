@@ -1,0 +1,17 @@
+WOW!That sounds odd. Could you describe that problem in more detail?
+
+OH!No other customer has ever complained about this before. What is your system configuration?
+
+OH!That sounds interesting. Tell me more...
+
+WOW!I need a bit more information on that.
+
+OH!Have you checked that you do not have a dll conflict?
+
+WOW!That is explained in the manual. Have you read the manual?
+
+OH!Your description is a bit wishy-washy. Have you got an expert there with you who could describe this more precisely?
+
+WOW!That's not a bug, it's a feature!
+
+OH!Could you elaborate on that?
